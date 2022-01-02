@@ -10,6 +10,9 @@
 #include "cam_res_mgr_api.h"
 #include "cam_common_util.h"
 #include "cam_packet_util.h"
+#if defined(CONFIG_MACH_KONA_TIMELM)
+#include <soc/qcom/lge/lge_regulator_mode_change.h>
+#endif
 
 static int cam_flash_set_gpio(struct cam_flash_ctrl *fctrl,
 	bool enable)
@@ -528,7 +531,7 @@ static int cam_flash_ops(struct cam_flash_ctrl *flash_ctrl,
 				else
 					curr = max_current;
 			}
-			CAM_DBG(CAM_FLASH, "Led_Torch[%d]: Current: %d",
+			CAM_ERR(CAM_FLASH, "Led_Torch[%d]: Current: %d",
 				i, curr);
 			cam_res_mgr_led_trigger_event(
 				flash_ctrl->torch_trigger[i], curr);
@@ -548,7 +551,7 @@ static int cam_flash_ops(struct cam_flash_ctrl *flash_ctrl,
 				else
 					curr = max_current;
 			}
-			CAM_DBG(CAM_FLASH, "LED_Flash[%d]: Current: %d",
+			CAM_ERR(CAM_FLASH, "LED_Flash[%d]: Current: %d",
 				i, curr);
 			cam_res_mgr_led_trigger_event(
 				flash_ctrl->flash_trigger[i], curr);
@@ -572,6 +575,15 @@ int cam_flash_off(struct cam_flash_ctrl *flash_ctrl)
 		CAM_ERR(CAM_FLASH, "Flash control Null");
 		return -EINVAL;
 	}
+#if defined(CONFIG_MACH_KONA_TIMELM)
+	if (isEnable == true)
+	{
+        CAM_INFO(CAM_FLASH, "bob_mode_disable");
+        bob_mode_disable();
+        isEnable = false;
+	}
+#endif
+
 	CAM_DBG(CAM_FLASH, "Flash OFF Triggered");
 	if (flash_ctrl->switch_trigger)
 		cam_res_mgr_led_trigger_event(flash_ctrl->switch_trigger,
@@ -620,6 +632,15 @@ static int cam_flash_high(
 		CAM_ERR(CAM_FLASH, "Flash Data Null");
 		return -EINVAL;
 	}
+
+#if defined(CONFIG_MACH_KONA_TIMELM)
+	if (isEnable == false)
+	{
+        CAM_INFO(CAM_FLASH, "bob_mode_enable");
+        bob_mode_enable();
+        isEnable = true;
+	}
+#endif
 
 	for (i = 0; i < flash_ctrl->torch_num_sources; i++)
 		if (flash_ctrl->torch_trigger[i])
@@ -1902,6 +1923,15 @@ void cam_flash_shutdown(struct cam_flash_ctrl *fctrl)
 
 	if (fctrl->flash_state == CAM_FLASH_STATE_INIT)
 		return;
+
+#if defined(CONFIG_MACH_KONA_TIMELM)
+	if (isEnable == true)
+	{
+        CAM_INFO(CAM_FLASH, "bob_mode_disable");
+        bob_mode_disable();
+        isEnable = false;
+	}
+#endif
 
 	if ((fctrl->flash_state == CAM_FLASH_STATE_CONFIG) ||
 		(fctrl->flash_state == CAM_FLASH_STATE_START)) {
