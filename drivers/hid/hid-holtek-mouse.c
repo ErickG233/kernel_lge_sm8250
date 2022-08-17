@@ -110,6 +110,7 @@ static struct hid_driver holtek_mouse_driver = {
 	.id_table = holtek_mouse_devices,
 	.report_fixup = holtek_mouse_report_fixup,
 	.probe = holtek_mouse_probe,
+	.probe = holtek_mouse_probe,
 };
 
 module_hid_driver(holtek_mouse_driver);
