@@ -189,6 +189,10 @@ obj-$(CONFIG_TEE)		+= tee/
 obj-$(CONFIG_MULTIPLEXER)	+= mux/
 obj-$(CONFIG_ESOC)              += esoc/
 obj-$(CONFIG_UNISYS_VISORBUS)	+= visorbus/
+obj-$(CONFIG_TSPDRV)		+= tspdrv/
+ifeq ($(CONFIG_TRUSTONIC_TEE),y)
+obj-$(CONFIG_TRUSTONIC_TEE)	+= gud/
+endif
 obj-$(CONFIG_SIOX)		+= siox/
 obj-$(CONFIG_GNSS)		+= gnss/
 obj-$(CONFIG_SENSORS_SSC)	+= sensors/
