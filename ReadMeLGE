@@ -1,0 +1,16 @@
+Kernel for LGE-LMV600
+
+# Any note you should know
+------------------------------------------------------
+
+1. This source only release android T rebase commits
+
+2. LGE's android T source supprots android R/S/T, by the way, if you want to
+   compile for R, you should pick the config of R release
+   
+3. LGE's kernel source does not release wlan driver
+
+4. LGE's kernel source does not release exfat module
+
+5. The kernel built by this source will be force reboot if type-c cable plug in
+   You should disable CONFIG_IPC_DEBUG
